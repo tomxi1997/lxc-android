@@ -13,9 +13,7 @@ jobs:
         compiler:
           - gcc
           - clang
-        os:
-          - ubuntu-22.04
-    runs-on: ${{ matrix.os }}
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

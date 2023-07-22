@@ -43,6 +43,8 @@ lxc.cgroup.devices.allow = c 1:9 rwm
 lxc.cgroup.devices.allow = c 136:* rwm
 ### fuse
 lxc.cgroup.devices.allow = c 10:229 rwm
+### docker
+lxc.cgroup.devices.allow = c 10:200 rwm
 
 # Default unified cgroup configuration
 #

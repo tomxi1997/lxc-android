@@ -1,0 +1,27 @@
+# Set up wireless networking configuration
+if [ ! -e "$LXC_ROOTFS_PATH/etc/systemd/network/21-wireless.network" ]; then
+    echo -e "[Match]\nName=wlan0\n\n[Network]\nDHCP=yes\n\n[DHCP]\nRouteMetric=120" > "$LXC_ROOTFS_PATH/etc/systemd/network/21-wireless.network"
+fi
+
+# Create and mount cgroup for systemd
+if [ ! -d "/sys/fs/cgroup/systemd" ]; then
+    mkdir -p "/sys/fs/cgroup/systemd"
+    mount -t cgroup cgroup -o none,name=systemd "/sys/fs/cgroup/systemd"
+fi
+
+# Set up rc.local service if not present
+if [ ! -e "$LXC_ROOTFS_PATH/etc/rc.local" ]; then
+    echo "[Install]" >> $LXC_ROOTFS_PATH/lib/systemd/system/rc-local.service
+    echo "WantedBy=multi-user.target" >> $LXC_ROOTFS_PATH/lib/systemd/system/rc-local.service
+    
+    ln -s "$LXC_ROOTFS_PATH/lib/systemd/system/rc-local.service" "$LXC_ROOTFS_PATH/etc/systemd/system/multi-user.target.wants/rc-local.service"
+
+    touch "$LXC_ROOTFS_PATH/etc/rc.local"
+    chmod +x "$LXC_ROOTFS_PATH/etc/rc.local"
+
+	echo "#!/bin/bash" > "$LXC_ROOTFS_PATH/etc/rc.local"
+    echo "update-alternatives --set iptables /usr/sbin/iptables-legacy" >> "$LXC_ROOTFS_PATH/etc/rc.local"
+    echo "iptables --wait -t filter -N DOCKER || iptables -t filter -F" >> "$LXC_ROOTFS_PATH/etc/rc.local"
+fi
+
+exit 0

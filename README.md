@@ -1,7 +1,8 @@
 
 在手机上如何编译？
 首先chroot/proot/lxc/linux ubuntu 22.04 （全新的环境）
-然后
+
+
 #安装依赖
 apt-get update -qq
 apt-get install --yes --no-install-recommends \

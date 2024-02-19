@@ -1,0 +1,67 @@
+name: Build lxc for Android 
+on:
+  watch:
+    types: [started]
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler:
+          - gcc
+          # - clang
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -qq gcc clang meson llvm
+          sudo apt-get install -qq libapparmor-dev libcap-dev libseccomp-dev libselinux1-dev linux-libc-dev libpam0g-dev docbook2x libdbus-1-dev gcc-aarch64-linux-gnu ccache
+
+      - name: Compiler version
+        env:
+          CC: ${{ matrix.compiler }}
+        run: |
+          ${CC} --version
+
+      - name: Kernel version
+        run: |
+          uname -a
+
+      - name: Mount table
+        run: |
+          findmnt
+
+      - name: Build
+        run: |
+          # Standard build
+          meson setup build \
+          --cross-file cross/cross-file.txt \
+          -Dstrip=true \
+          -Dprefix=/data/lxc \
+          -Druntime-path=/data/local/tmp \
+          -Dinit-script=sysvinit -Dman=false \
+          -Dpam-cgroup=false -Dtests=true \
+          -Dlog-path=/data/lxc/var/log/lxc \
+          -Ddata-path=/data/lxc/lib/lxc \
+          --localstatedir=/data/lxc/var/ \
+          -Druntime-path=/cache/ -Ddbus=false
+          ninja -C build
+          DESTDIR=build_install ninja -C build install
+          cd build/build_install/data/lxc/ && tar acf ../lxc.tar.gz .
+          
+          
+      - name: Upload Lxc.tar.gz
+        uses: actions/upload-artifact@v3
+        with:
+          name: Lxc.tar.gz
+          path: "build/build_install/data/lxc.tar.gz"
+        

@@ -8,8 +8,7 @@
 apt-get update -qq
 
 apt-get install --yes --no-install-recommends apparmor bash-completion bridge-utils build-essential \
-busybox-static clang cloud-image-utils curl dbus debhelper debootstrap devscripts dnsmasq-base docbook2x doxygen ed fakeroot file gcc graphviz git iptables meson net-tools libapparmor-dev libcap-dev libgnutls28-dev liblua5.2-dev libpam0g-dev libseccomp-dev libselinux1-dev libtool linux-libc-dev llvm lsb-release make openssl pkg-config python3-all-dev python3-setuptools rsync squashfs-tools uidmap unzip uuid-runtime wget xz-utils systemd-coredump libdbus-1-dev meson git docbook-utils
-
+busybox-static clang cloud-image-utils curl dbus debhelper debootstrap devscripts dnsmasq-base docbook2x doxygen ed fakeroot file gcc graphviz git iptables meson net-tools libapparmor-dev libcap-dev libgnutls28-dev liblua5.2-dev libpam0g-dev libseccomp-dev libselinux1-dev libtool linux-libc-dev llvm lsb-release make openssl pkg-config python3-all-dev python3-setuptools rsync squashfs-tools uidmap unzip uuid-runtime wget xz-utils systemd-coredump libdbus-1-dev meson git docbook-utils cmake pkg-config docbook2x
 apt-get remove --yes lxc-utils liblxc-common liblxc1 liblxc-dev
 
 
